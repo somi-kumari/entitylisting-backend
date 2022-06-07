@@ -3,25 +3,25 @@ const Product = require("../models/product.model");
 const router = express.Router();
 router.get("/", async (req, res) => {
   try {
-    // let filter = { $and: [{ product_color: { $eq: "Red" } }, { product_size: { $eq: "M" } }] };
-    let filter = (req.query.color || req.query.size)?{$and:[]}:{};
+
+    let filter = (req.query.color || req.query.size) ? { $and: [] } : {};
     if (req.query.color) {
-      
+
       filter["$and"].push({ product_color: { $eq: req.query.color } });
     }
     if (req.query.size) {
-      
+
       filter["$and"].push({ product_size: { $eq: req.query.size } });
     }
 
-    // console.log(filter["$and"]);
+
     let page = req.query.page || 1;
     let perPage = req.query.perPage || 20;
     let skip = (page - 1) * perPage;
     let sortData = req.query.sort
       ? {
-          product_price: `${req.query.sort == "asc" ? 1 : -1}`,
-        }
+        product_price: `${req.query.sort == "asc" ? 1 : -1}`,
+      }
       : null;
     // console.log(sortData, req.query.sort);
     let totalPage = Math.ceil(
